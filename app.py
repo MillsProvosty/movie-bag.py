@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
@@ -24,6 +24,20 @@ movies = [
 @app.route('/movies')
 def return_movies():
     return jsonify(movies)
+
+
+@app.route('/movies', methods=['POST'])
+def add_movie():
+    movie = request.get_json()
+    movies.append(movie)
+    return {'id': len(movies)}, 200
+
+
+@app.route('/movies/<int:index>', methods=['DELETE'])
+def delete_movie(index):
+    get_movie = request.get_data(index)
+    movies.__delitem__(get_movie)
+    return movies, 200
 
 
 if __name__ == '__main__':
